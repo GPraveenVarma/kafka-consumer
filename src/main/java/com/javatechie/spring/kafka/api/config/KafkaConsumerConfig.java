@@ -27,7 +27,11 @@ public class KafkaConsumerConfig {
 		configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
-		configs.put(ConsumerConfig.GROUP_ID_CONFIG, "javatechie-1");
+		configs.put(ConsumerConfig.GROUP_ID_CONFIG, "group100");
+		configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"latest");
+//		configs.put("enable.auto.commit", "false");
+//		configs.put("isolation.level", "read_committed");
+
 		return new DefaultKafkaConsumerFactory<>(configs);
 	}
 
@@ -46,7 +50,8 @@ public class KafkaConsumerConfig {
 		configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
 		configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
 		configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, JsonDeserializer.class);
-		configs.put(ConsumerConfig.GROUP_ID_CONFIG, "javatechie-2");
+		configs.put(ConsumerConfig.GROUP_ID_CONFIG, "grp1");
+		configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
 		return new DefaultKafkaConsumerFactory<>(configs, new StringDeserializer(), new JsonDeserializer<>(User.class));
 	}
 
@@ -54,6 +59,26 @@ public class KafkaConsumerConfig {
 	public ConcurrentKafkaListenerContainerFactory<String, User> userKafkaListenerContainerFactory() {
 		ConcurrentKafkaListenerContainerFactory<String, User> factory = new ConcurrentKafkaListenerContainerFactory<String, User>();
 		factory.setConsumerFactory(userConsumerFactory());
+		return factory;
+	}
+
+
+	@Bean
+	public ConsumerFactory<String, String> consumerFactory01() {
+		Map<String, Object> configs = new HashMap<>();
+		configs.put(ConsumerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
+		configs.put(ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		configs.put(ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG, StringDeserializer.class);
+		configs.put(ConsumerConfig.GROUP_ID_CONFIG, "001grp");
+		configs.put(ConsumerConfig.AUTO_OFFSET_RESET_CONFIG,"earliest");
+
+		return new DefaultKafkaConsumerFactory<>(configs);
+	}
+
+	@Bean
+	public ConcurrentKafkaListenerContainerFactory<String, String> kafkaListenerContainerFactoryOwnImp() {
+		ConcurrentKafkaListenerContainerFactory<String, String> factory = new ConcurrentKafkaListenerContainerFactory<>();
+		factory.setConsumerFactory(consumerFactory01());
 		return factory;
 	}
 
